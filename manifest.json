@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Screen Accessibility Helper",
+  "version": "2.9.0",
+  "description": "Captura pasiva de texto y multimedia con transcripción y traducción en tiempo real para lectura técnica",
+  "permissions": ["storage", "sidePanel", "tabs", "declarativeNetRequest", "declarativeNetRequestWithHostAccess"],
+  "host_permissions": ["https://translate.googleapis.com/*", "<all_urls>"],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "cors_rules",
+        "enabled": true,
+        "path": "rules.json"
+      }
+    ]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "Abrir Panel"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["audit-checklist.js", "local-dictionary.js", "page-capture.js", "media-capture.js"],
+      "run_at": "document_idle",
+      "all_frames": false,
+      "world": "MAIN"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["audit-checklist.js", "gesture-module.js", "content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}
